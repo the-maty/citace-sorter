@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Řazení bibliografických citací</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📚 Seřazení bibliografie podle české abecedy</h1>
+    <p>
+      Vložte seznam citací (každá začínající např. <code>[1]</code>) a klikněte na tlačítko. 
+      Formátování citací zůstane zachováno. Číslování bude automaticky přečíslováno.
+    </p>
+
+    <textarea id="input" placeholder="Vložte citace sem..."></textarea>
+
+    <div class="buttons">
+      <button onclick="sortCitations()">Seřadit česky</button>
+      <button onclick="copyOutput()">Kopírovat výstup</button>
+    </div>
+
+    <textarea id="output" readonly placeholder="Zde bude výstup..."></textarea>
+    <footer class="footer">
+      👨‍🍳 Uvařil <a href="https://github.com/the-maty" target="_blank" rel="noopener">MaTy</a> © 2025
+  </footer>
+  </div>
+
+  <script>
+    function normalizeCzech(str) {
+      return str.toLowerCase()
+        .replace(/á/g, 'a').replace(/č/g, 'cz').replace(/ď/g, 'd')
+        .replace(/é/g, 'e').replace(/ě/g, 'e').replace(/í/g, 'i')
+        .replace(/ň/g, 'n').replace(/ó/g, 'o').replace(/ř/g, 'rz')
+        .replace(/š/g, 'sz').replace(/ť/g, 't').replace(/ú/g, 'u')
+        .replace(/ů/g, 'u').replace(/ý/g, 'y').replace(/ž/g, 'zz');
+    }
+
+    function sortCitations() {
+      const input = document.getElementById("input").value;
+      const lines = input.split(/\r?\n/).filter(line => line.trim().startsWith("["));
+
+      lines.sort((a, b) => {
+        const cleanA = normalizeCzech(a.replace(/^\[\d+\]\s*/, ""));
+        const cleanB = normalizeCzech(b.replace(/^\[\d+\]\s*/, ""));
+        return cleanA.localeCompare(cleanB);
+      });
+
+      const renumbered = lines.map((line, idx) => `[${idx + 1}] ` + line.replace(/^\[\d+\]\s*/, ""));
+      document.getElementById("output").value = renumbered.join("\n\n");
+    }
+
+    function copyOutput() {
+      const out = document.getElementById("output");
+      out.select();
+      document.execCommand("copy");
+    }
+  </script>
+</body>
+</html>
