@@ -23,18 +23,42 @@ function sortCitations() {
   });
 
   const renumbered = [];
-  const mappingLines = [];
+  const mappingAddLines = [];
 
   originalMap.forEach((item, newIndex) => {
     const newNumber = newIndex + 1;
     const stripped = item.line.replace(/^\[\d+\]\s*/, "");
     const line = `[${newNumber}] [původně: ${item.original}] ${stripped}`;
     renumbered.push(line);
-    mappingLines.push(`mapping.Add "${item.original}", "${newNumber}"`);
+    mappingAddLines.push(`    mapping.Add "${item.original}", "${newNumber}"`);
   });
 
+  const finalVBScript = [
+    'Sub PrecislovatCitaceCesky()',
+    '    Dim mapping As Object',
+    '    Set mapping = CreateObject("Scripting.Dictionary")',
+    '',
+    ...mappingAddLines,
+    '',
+    '    Dim key As Variant',
+    '    For Each key In mapping.Keys',
+    '        With Selection.Find',
+    '            .ClearFormatting',
+    '            .Replacement.ClearFormatting',
+    '            .Text = "{{" & key & "}}"',
+    '            .Replacement.Text = "[" & mapping(key) & "]"',
+    '            .Forward = True',
+    '            .Wrap = wdFindContinue',
+    '            .Execute Replace:=wdReplaceAll',
+    '        End With',
+    '    Next key',
+    '',
+    '    MsgBox "Citace zmeneny na pozadovany format z {{cislo}} na [cislo] podle pozadovaneho poradi", vbInformation',
+    'End Sub'
+  ].join('\n');
+
   document.getElementById("output").value = renumbered.join("\n\n");
-  document.getElementById("vbsOutput").value = mappingLines.join("\n");
+  document.getElementById("vbsOutput").value = finalVBScript;
 }
 
 function copyOutput() {
@@ -50,5 +74,5 @@ function copyMapping() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  sortCitations(); // Spustit automaticky při načtení
+  sortCitations();
 });
