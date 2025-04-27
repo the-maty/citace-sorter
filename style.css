@@ -6,6 +6,28 @@ body {
   color: #222;
 }
 
+.github-link {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffffff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  font-size: 0.95rem;
+  z-index: 1000;
+}
+
+.github-link a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.github-link a:hover {
+  text-decoration: underline;
+}
+
 .container {
   max-width: 800px;
   margin: auto;
@@ -95,6 +117,39 @@ label {
   font-size: 0.9rem;
   color: #666;
 }
+
+.macro-box {
+  margin-bottom: 1rem;
+  background: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.macro-box pre {
+  background: #e8e8e8;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.macro-box button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 0.2rem;
+}
+
+.macro-box button:hover {
+  background-color: #218838;
+}
+
 
 .footer a {
   color: #007bff;

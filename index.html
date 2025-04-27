@@ -4,16 +4,52 @@
   <meta charset="UTF-8">
   <title>Řazení bibliografických citací</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
 </head>
 <body>
+  <div class="github-link">
+    <a href="https://github.com/the-maty/prevedeni-citace-word" target="_blank" rel="noopener">📖 Návod</a>
+  </div>  
   <div class="container">
+
     <h1>📚 Seřazení bibliografie podle české abecedy</h1>
-    <p>Vložte seznam citací (každá začínající např. <code>[1]</code>) a klikněte na tlačítko. Formátování citací zůstane zachováno. Číslování bude automaticky přečíslováno. Ve výstupu je vždy uvedeno původní pořadí i automaticky generované mapování pro VBScript.</p>
+
+    <!-- Tlačítko pro otevření makra -->
+    <div class="macro-box">
+      <p>Toto makro umožní rychlý převod citací z formátu [1] na {{1}} ve Wordu. Kliknutím zobrazíte kód a můžete si ho rovnou zkopírovat do schránky.</p>
+      <button onclick="toggleMacro()">📋 Zobrazit / Kopírovat makro</button>
+      
+      <div id="macroContent" style="display: none; margin-top: 1rem;">
+        <pre id="macroCode"><code>Sub PrevestNaZavorky()
+    Dim i As Integer
+
+    For i = 1 To 99
+        With Selection.Find
+            .ClearFormatting
+            .Replacement.ClearFormatting
+            .Text = "[" & i & "]"
+            .Replacement.Text = "{{" & i & "}}"
+            .Forward = True
+            .Wrap = wdFindContinue
+            .Execute Replace:=wdReplaceAll
+        End With
+    Next i
+
+    MsgBox "Hotovo! Všechny citace převedeny na {{x}} formát.", vbInformation
+End Sub</code></pre>
+        <button onclick="copyMacro()">Kopírovat makro do schránky</button>
+      </div>
+    </div>
+
+    <!-- Popis k textarea -->
+    <p>Vložte seznam citací (každá začínající např. <code>[1]</code>) a klikněte na tlačítko <b>Seřadit</b></p>
 
     <textarea id="input" placeholder="Vložte citace zde..."></textarea>
 
     <div class="buttons">
-      <button onclick="sortCitations()">Seřadit česky</button>
+      <button onclick="sortCitations()">Seřadit</button>
       <button onclick="copyOutput()">Kopírovat výstup</button>
       <button onclick="copyMapping()">Kopírovat mapování pro Win</button>
     </div>
@@ -27,5 +63,24 @@
   </div>
 
   <script src="main.js"></script>
+  <script>
+    function toggleMacro() {
+      const macro = document.getElementById("macroContent");
+      if (macro.style.display === "none") {
+        macro.style.display = "block";
+      } else {
+        macro.style.display = "none";
+      }
+    }
+
+    function copyMacro() {
+      const macro = document.getElementById("macroCode").innerText;
+      navigator.clipboard.writeText(macro).then(function() {
+        alert("Makro bylo zkopírováno!");
+      }, function(err) {
+        alert("Nepodařilo se zkopírovat makro: ", err);
+      });
+    }
+  </script>
 </body>
 </html>
